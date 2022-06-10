@@ -1,23 +1,17 @@
 const { promiseTheaterIXX, promiseTheaterVGC } = require("./external.js");
 
 // TODO: Buat fungsi promiseOutput sesuai ketentuan readme
-let penontonMarah = 0;
-let penontonTidakMarah = 0;
-
 const promiseOutput = async (emosi) => {
-  const dataTheaterIXX = await promiseTheaterIXX(emosi);
-  const dataTheaterVGC = await promiseTheaterVGC(emosi);
+  try {
+    const filmIXX = await promiseTheaterIXX(emosi);
+    const filmVGC = await promiseTheaterVGC(emosi);
+    const allFilm = [...filmIXX, ...filmVGC];
 
-  if (emosi == "marah") {
-    dataTheaterIXX.map((films) => films.hasil == "marah" ? penontonMarah++ : "");
-    dataTheaterVGC.map((films) => films.hasil == "marah" ? penontonMarah++ : "");
+    const filterByEmosi = allFilm.filter((res) => res.hasil == emosi);
 
-    return penontonMarah;
-  } else {
-    dataTheaterIXX.map((films) => films.hasil == "tidak marah" ? penontonTidakMarah++ : "");
-    dataTheaterVGC.map((films) => films.hasil == "tidak marah" ? penontonTidakMarah++ : "");
-
-    return penontonTidakMarah;
+    return filterByEmosi.length;
+  } catch (err) {
+    console.log(`Whoops, error: ${err}`);
   }
 };
 
